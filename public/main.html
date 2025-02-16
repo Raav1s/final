@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wiki Route</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wdth@75..100&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Updock&display=swap");
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #333;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      a {
+        font-size: 17px;
+      }
+
+      /* header */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0px 4px 14px 8px rgba(34, 60, 80, 0.2);
+        height: 90px;
+      }
+
+      header .rap {
+        padding: 5px 15% 0;
+      }
+
+      .inner-rap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .first-part {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .inner-rap ul {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding: 0;
+        width: 1200px;
+      }
+
+      .inner-rap ul li {
+        list-style-type: none;
+        margin-right: 20px;
+      }
+
+      .inner-rap ul li button {
+        background-color: white;
+        color: black;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 30px;
+      }
+
+      .inner-rap ul libutton:focus {
+        outline: none;
+      }
+
+      li {
+        list-style-type: none;
+        margin-bottom: 10px;
+      }
+
+      .inner-rap a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .first {
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 2px;
+      }
+
+      /* main */
+      main {
+        margin-top: 10%;
+      }
+      .main-img img {
+        border-radius: 50px;
+        position: relative;
+        height: 550px;
+        margin-bottom: 60px;
+        box-shadow: 0px 0px 27px 6px rgba(34, 60, 80, 0.2);
+      }
+      .main-img h2 {
+        border-radius: 50px;
+        position: absolute;
+        top: 40%;
+        left: 40%;
+        font-size: 60px;
+        color: #fff;
+      }
+
+      #general_info {
+        margin-bottom: 200px;
+      }
+      .inner-cont {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .inner-cont2 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .inner-cont .info img {
+        height: 211px;
+        padding: 10px 0;
+      }
+      .title {
+        margin: 5px;
+      }
+      .title h2,
+      h3 {
+        margin: 20px;
+      }
+      .info,
+      .title {
+        text-align: center;
+      }
+      .cont {
+        border-radius: 40px;
+        width: 1000px;
+        box-shadow: 1px 0px 16px 7px rgba(34, 60, 80, 0.2) inset;
+      }
+      .title h1 {
+        margin: 30px 0 20px;
+        font-size: 40px;
+      }
+
+      #general_info .info {
+        margin: 15px 0;
+      }
+
+      #general_info .cont p {
+        padding: 10px 0;
+      }
+
+      #attractions {
+        margin-bottom: 200px;
+      }
+
+      #attractions .title {
+        margin-bottom: 30px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        width: 1190px;
+        margin-bottom: 30px;
+      }
+
+      .att-card {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: end;
+        color: #fff;
+        height: 420px;
+        width: 340px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .att-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .att-card::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.7),
+          rgba(0, 0, 0, 0)
+        );
+        z-index: 0;
+      }
+      .att-card h2,
+      .att-card p {
+        position: relative;
+        z-index: 1;
+      }
+
+      .att-card h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .att-card p {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .no-select {
+        user-select: none;
+      }
+
+      .text-container {
+        max-height: 4.5em;
+        line-height: 1.5;
+        mask-image: linear-gradient(180deg, black 80%, transparent);
+      }
+      .btn-exp {
+        background-color: #8e8e8e;
+        color: white;
+        border: 1px solid #666;
+        padding: 20px 50px;
+        border-radius: 35px;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 5px 0 #555;
+      }
+
+      .btn-exp:hover {
+        background: #555;
+        box-shadow: none;
+        position: relative;
+        top: 5px;
+      }
+
+      footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 10px;
+        font-size: 18px;
+        height: 100px;
+        box-shadow: 0px 4px 14px 8px rgba(34, 60, 80, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="rap">
+        <div class="inner-rap">
+          <div class="first-part">
+            <a href="index.html" class="first">wikiroute</a>
+          </div>
+          <div class="second-part">
+            <ul>
+              <li>
+                <button
+                  id="register-btn"
+                  onclick="window.location.href='/register'"
+                >
+                  Регистрация
+                </button>
+              </li>
+              <li>
+                <button id="login-btn" onclick="window.location.href='/login'">
+                  Вход
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="images">
+        <div class="rap">
+          <div class="inner-rap">
+            <div class="main-img">
+              <img src="main-photo.jpg" alt="" />
+              <h2>South Korea</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="general_info">
+        <div class="rap">
+          <div class="inner-rap">
+            <div class="title">
+              <h1>General information</h1>
+              <h2>South Korea</h2>
+            </div>
+            <div class="cont">
+              <div class="inner-cont">
+                <div class="info">
+                  <h4>Flag</h4>
+                  <img src="flag.jpg" alt="" />
+                </div>
+                <div class="info">
+                  <h4>Coat of arms</h4>
+                  <img src="Coat.png" alt="" />
+                </div>
+              </div>
+              <div class="inner-cont2">
+                <div class="info">
+                  <h4>Date of Establishment</h4>
+                  <p>August 15, 1948</p>
+                </div>
+                <div class="info">
+                  <h4>Official Language</h4>
+                  <p>Korean</p>
+                </div>
+                <div class="info">
+                  <h4>Form of Government</h4>
+                  <p>Presidential Republic</p>
+                </div>
+                <div class="info">
+                  <h4>Territory</h4>
+                  <p>99,720 km² (109th in the world)</p>
+                </div>
+                <div class="info">
+                  <h4>Population</h4>
+                  <p>48,955,203 people (25th in the world)</p>
+                </div>
+                <div class="info">
+                  <h4>Capital</h4>
+                  <p>Seoul</p>
+                </div>
+                <div class="info">
+                  <h4>Currency</h4>
+                  <p>South Korean Won (KRW)</p>
+                </div>
+                <div class="info">
+                  <h4>Time Zone</h4>
+                  <p>UTC +9</p>
+                </div>
+                <div class="info">
+                  <h4>Major Cities</h4>
+                  <p>Seoul, Incheon, Gwangju, Busan, Daegu</p>
+                </div>
+                <div class="info">
+                  <h4>GDP</h4>
+                  <p>$1.457 trillion (12th in the world)</p>
+                </div>
+                <div class="info">
+                  <h4>Internet Domain</h4>
+                  <p>.kr</p>
+                </div>
+                <div class="info">
+                  <h4>Phone Code</h4>
+                  <p>+82</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="attractions">
+        <div class="rap">
+          <div class="inner-rap">
+            <div class="title">
+              <h1>Attractions</h1>
+            </div>
+
+            <div class="att_info no-select">
+              <div class="row">
+                <div
+                  class="att-card"
+                  style="background-image: url('card1.jpg')"
+                >
+                  <h2>Jeju Island</h2>
+                  <p class="text-container">
+                    A volcanic island in South Korea, famous for Hallasan
+                    Mountain, its lava tube caves (such as Manjanggul), and
+                    pristine beaches.
+                  </p>
+                </div>
+                <div
+                  class="att-card"
+                  style="background-image: url('card2.jpg')"
+                >
+                  <h2>Bulguksa Temple</h2>
+                  <p class="text-container">
+                    A Buddhist temple from the 8th century located in Gyeongju,
+                    showcasing exquisite architecture and historic pagodas.
+                  </p>
+                </div>
+                <div
+                  class="att-card"
+                  style="background-image: url('card3.jpg')"
+                >
+                  <h2>Hwaseong Fortress</h2>
+                  <p class="text-container">
+                    An 18th-century fortress in Suwon built during the Joseon
+                    dynasty. This architectural marvel includes intricate gates
+                    and walls, reflecting both defensive and aesthetic design.
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  class="att-card"
+                  style="background-image: url('card4.jpg')"
+                >
+                  <h2>Seokguram Grotto</h2>
+                  <p class="text-container">
+                    A stone grotto temple on Mount Tohamsan, housing a serene
+                    Buddha statue surrounded by intricate carvings.
+                  </p>
+                </div>
+                <div
+                  class="att-card"
+                  style="background-image: url('card5.jpg')"
+                >
+                  <h2>Sea of Japan</h2>
+                  <p class="text-container">
+                    The eastern coastline of Korea, known for its crystal-clear
+                    waters, scenic beaches, and abundant fishing resources. It’s
+                    a major area for maritime culture and seafood cuisine.
+                  </p>
+                </div>
+                <div
+                  class="att-card"
+                  style="background-image: url('card6.png')"
+                >
+                  <h2>Yellow Sea</h2>
+                  <p class="text-container">
+                    The western coastline of Korea, characterized by shallow
+                    waters, dramatic tidal changes, and a rich marine ecosystem.
+                    It’s vital for fishing, coastal tourism, and mudflat
+                    ecology.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p id="current-date"></p>
+      <p>Beisembay Umitzhan</p>
+      <p>&copy; 2024 Your Company. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog panel</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wdth@75..100&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Updock&display=swap");
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #333;
+      }
+      
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      a {
+        font-size: 17px;
+      }
+
+      /* header */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0px 4px 14px 8px rgba(34, 60, 80, 0.2);
+        height: 90px;
+      }
+
+      header .rap {
+        padding: 5px 15% 0;
+      }
+
+      .inner-rap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .first-part {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .inner-rap ul {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding: 0;
+        width: 1200px;
+      }
+
+      .inner-rap ul li {
+        list-style-type: none;
+        margin-right: 20px;
+      }
+
+      .inner-rap ul li button {
+        background-color: white;
+        color: black;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 30px;
+      }
+
+      .inner-rap ul li button:focus {
+        outline: none;
+      }
+
+      li {
+        list-style-type: none;
+        margin-bottom: 10px;
+      }
+
+      .inner-rap a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .first {
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 2px;
+      }
+
+      /* main */
+      main {
+        margin-top: 10%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h1,
+      h2 {
+        color: #333;
+        text-align: center;
+      }
+
+      .form-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        width: 420px;
+        max-width: 100%;
+        margin-bottom: 20px;
+      }
+
+      input,
+      textarea {
+        width: 95%;
+        padding: 10px;
+        margin-top: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      button {
+        background: #007bff;
+        color: white;
+        font-weight: bold;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+        width: 100%;
+      }
+
+      .blog-list {
+        width: 600px;
+        max-width: 100%;
+      }
+
+      .blog {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        transition: 0.3s;
+        position: relative;
+      }
+
+      .blog h3 {
+        margin: 0;
+        color: #444;
+      }
+
+      .blog p {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .blog small {
+        display: block;
+        margin-top: 5px;
+        color: #888;
+      }
+
+      .blog .buttons {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .blog button {
+        padding: 8px;
+        font-size: 12px;
+        flex: 1;
+      }
+
+      .edit-btn {
+        background: #f39c12;
+      }
+
+      .edit-btn:hover {
+        background: #e67e22;
+      }
+
+      .delete-btn {
+        background: #e74c3c;
+      }
+
+      .delete-btn:hover {
+        background: #c0392b;
+      }
+
+      /* Скрытая форма редактирования */
+      .edit-form {
+        display: none;
+        margin-top: 10px;
+      }
+
+      .edit-form input,
+      .edit-form textarea {
+        width: 96%;
+        margin-bottom: 5px;
+      }
+    </style>
+    <script>
+      // Проверяем токен при загрузке страницы
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
+
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // Обработчик кнопки "Выход"
+        logoutBtn.addEventListener("click", () => {
+          console.log("Кнопка нажата");
+          document.cookie = "token=; Max-Age=0"; // Удаляем токен
+          window.location.href = "/"; // Перенаправляем на главную страницу
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="rap">
+        <div class="inner-rap">
+          <div class="first-part">
+            <a href="/main" class="first">wikiroute</a>
+          </div>
+          <div class="second-part">
+            <ul>
+              <li>
+                <a href="/qr-image.html">QR-img</a>
+              </li>
+              <li>
+                <a href="/BMI.html">BMI</a>
+              </li>
+              <li>
+                <a href="/API.html">API</a>
+              </li>
+              <li>
+                <a href="/CRUD.html">CRUD</a>
+              </li>
+              <li>
+                <a id="logout-btn">Выход</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <h1>Blog panel</h1>
+
+      <!-- Форма создания блога -->
+      <div class="form-container">
+        <h2>Create a new blog</h2>
+        <input type="text" id="title" placeholder="Title" />
+        <textarea id="body" placeholder="Blog Text"></textarea>
+        <input type="text" id="author" placeholder="Author" />
+        <button onclick="createBlog()">Create</button>
+      </div>
+
+      <!-- Список блогов -->
+      <h2>List of blogs</h2>
+      <div class="blog-list" id="blogs"></div>
+    </main>
+
+    <script>
+      const API_URL = "/blogs";
+
+      // Получение списка блогов
+      async function fetchBlogs() {
+        const res = await fetch(API_URL);
+        const blogs = await res.json();
+        const blogsContainer = document.getElementById("blogs");
+        blogsContainer.innerHTML = "";
+        blogs.forEach((blog) => {
+          blogsContainer.innerHTML += `
+                    <div class="blog" id="blog-${blog._id}">
+                        <h3>${blog.title}</h3>
+                        <p>${blog.body}</p>
+                        <small>Автор: ${blog.author || "Unknown"}</small>
+                        <div class="buttons">
+                            <button class="edit-btn" onclick="showEditForm('${
+                              blog._id
+                            }', '${blog.title}', '${blog.body}', '${
+            blog.author || ""
+          }')">✏️ Edit</button>
+                            <button class="delete-btn" onclick="deleteBlog('${
+                              blog._id
+                            }')">🗑️ Delete</button>
+                        </div>
+                        <div class="edit-form" id="edit-form-${blog._id}">
+                            <h4>Edit blog</h4>
+                            <input type="text" id="edit-title-${
+                              blog._id
+                            }" value="${blog.title}" style: >
+                            <textarea id="edit-body-${blog._id}">${
+            blog.body
+          }</textarea>
+                            <input type="text" id="edit-author-${
+                              blog._id
+                            }" value="${blog.author || ""}">
+                            <button onclick="saveEdit('${
+                              blog._id
+                            }')">💾 Save</button>
+                            <button onclick="hideEditForm('${
+                              blog._id
+                            }')">❌ Cancel</button>
+                        </div>
+                    </div>
+                `;
+        });
+      }
+
+      // Создание нового блога с очисткой формы
+      async function createBlog() {
+        const title = document.getElementById("title").value;
+        const body = document.getElementById("body").value;
+        const author = document.getElementById("author").value;
+
+        if (!title || !body) {
+          alert("Headline and text are a must!");
+          return;
+        }
+
+        await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, body, author }),
+        });
+
+        // Очистка формы
+        document.getElementById("title").value = "";
+        document.getElementById("body").value = "";
+        document.getElementById("author").value = "";
+
+        fetchBlogs();
+      }
+
+      // Показать форму редактирования
+      function showEditForm(id) {
+        document.getElementById(`edit-form-${id}`).style.display = "block";
+      }
+
+      // Скрыть форму редактирования
+      function hideEditForm(id) {
+        document.getElementById(`edit-form-${id}`).style.display = "none";
+      }
+
+      // Сохранение редактирования блога
+      async function saveEdit(id) {
+        const newTitle = document.getElementById(`edit-title-${id}`).value;
+        const newBody = document.getElementById(`edit-body-${id}`).value;
+        const newAuthor = document.getElementById(`edit-author-${id}`).value;
+
+        if (!newTitle || !newBody) {
+          alert("Headline and text are a must!");
+          return;
+        }
+
+        await fetch(`${API_URL}/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: newTitle,
+            body: newBody,
+            author: newAuthor,
+          }),
+        });
+
+        fetchBlogs();
+      }
+
+      // Удаление блога
+      async function deleteBlog(id) {
+        if (!confirm("Are you sure you want to delete this blog?")) return;
+
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+
+        fetchBlogs();
+      }
+
+      // Загрузка списка блогов при открытии страницы
+      fetchBlogs();
+    </script>
+  </body>
+</html>

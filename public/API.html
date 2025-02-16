@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather API App</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans:wdth@75..100&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Updock&display=swap");
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Open Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        background-size: cover; /* Покрытие всей области */
+        background-repeat: no-repeat;
+        height: 100vh;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      a {
+        font-size: 17px;
+      }
+
+      /* header */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: white;
+        box-shadow: 0px 4px 14px 8px rgba(34, 60, 80, 0.2);
+        height: 90px;
+      }
+
+      header .rap {
+        padding: 5px 15% 0;
+      }
+
+      .inner-rap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .first-part {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .inner-rap ul {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding: 0;
+        width: 1200px;
+      }
+
+      .inner-rap ul li {
+        list-style-type: none;
+        margin-right: 20px;
+      }
+
+      .inner-rap ul li button {
+        background-color: white;
+        color: black;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 30px;
+      }
+
+      .inner-rap ul li button:focus {
+        outline: none;
+      }
+
+      li {
+        list-style-type: none;
+        margin-bottom: 10px;
+      }
+
+      .inner-rap a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .first {
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 2px;
+      }
+      header button {
+        background-color: transparent;
+        border: none;
+        color: inherit; /* Сохраняет цвет текста */
+      }
+      /* main */
+      main {
+        margin-top: 10%;
+      }
+
+      /* Контейнер для формы */
+      .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+      label {
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input[type="text"] {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        background: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .error {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      /* Стили для карты */
+      #map {
+        height: 400px;
+        width: 100%;
+        border-radius: 12px;
+        margin-top: 30px;
+      }
+
+      /* Мобильная адаптивность */
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        input[type="text"] {
+          width: 80%;
+        }
+
+        button {
+          padding: 10px 20px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+      }
+    </style>
+    <script>
+      // Проверяем токен при загрузке страницы
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          ?.split("=")[1];
+
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // Обработчик кнопки "Выход"
+        logoutBtn.addEventListener("click", () => {
+          console.log("Кнопка нажата");
+          document.cookie = "token=; Max-Age=0"; // Удаляем токен
+          window.location.href = "/"; // Перенаправляем на главную страницу
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <div class="rap">
+        <div class="inner-rap">
+          <div class="first-part">
+            <a href="/main" class="first">wikiroute</a>
+          </div>
+          <div class="second-part">
+            <ul>
+              <li>
+                <a href="/qr-image.html">QR-img</a>
+              </li>
+              <li>
+                <a href="/BMI.html">BMI</a>
+              </li>
+              <li>
+                <a href="/API.html">API</a>
+              </li>
+              <li>
+                <a href="/CRUD.html">CRUD</a>
+              </li>
+              <li>
+                <a id="logout-btn">Выход</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <h1>Weather API App</h1>
+        <form action="/weather" method="get">
+          <div class="error" id="error-message"></div>
+          <label for="city">Enter city:</label>
+          <input type="text" name="city" placeholder="Enter city" required />
+          <button type="submit">Get Weather</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
