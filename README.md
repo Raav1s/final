@@ -34,7 +34,7 @@ Make sure you have the following installed on your machine:
    ```
 2. Install dependencies:
    ```sh
-   npm install
+   npm install express path bcrypt jwt-simple pg cookie-parser nodemailer body-parser cors mongodb axios qr-image
    ```
 3. Configure PostgreSQL:
    - Create a database named `Reg_Log`.
